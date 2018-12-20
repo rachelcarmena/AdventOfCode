@@ -93,7 +93,7 @@ class Mine:
         carts = []
         for y in range(len(self.data)):
             for x, symbol in enumerate(self.data[y]):
-                if symbol in ['>', '<', '^', 'v']:
+                if symbol in [cart_symbol.value for cart_symbol in CartSymbol]:
                     carts.append(Cart(Point(x, y), CartSymbol(symbol), Decision.RIGHT))
         return Carts(carts)
 
