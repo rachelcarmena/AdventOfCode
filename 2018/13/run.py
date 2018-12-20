@@ -21,30 +21,13 @@ class CartSymbol(Enum):
     RIGHT = '>'
     LEFT = '<'
 
-    def next_from(self, found_symbol, decision):
-        if found_symbol == INTERSECTION:
-            if decision == Decision.LEFT: return self.__left()
-            if decision == Decision.STRAIGHT: return self
-            if decision == Decision.RIGHT: return self.__right()
-        if found_symbol == CURVE_NW_SE:
-            if self == self.LEFT: return self.DOWN
-            if self == self.RIGHT: return self.UP
-            if self == self.UP: return self.RIGHT
-            if self == self.DOWN: return self.LEFT
-        if found_symbol == CURVE_NE_SW:
-            if self == self.LEFT: return self.UP
-            if self == self.RIGHT: return self.DOWN
-            if self == self.UP: return self.LEFT
-            if self == self.DOWN: return self.RIGHT
-        return self
-
-    def __left(self):
+    def left(self):
         if self == self.RIGHT: return self.UP
         if self == self.UP: return self.LEFT
         if self == self.LEFT: return self.DOWN
         if self == self.DOWN: return self.RIGHT
 
-    def __right(self):
+    def right(self):
         if self == self.RIGHT: return self.DOWN
         if self == self.DOWN: return self.LEFT
         if self == self.LEFT: return self.UP
@@ -56,22 +39,16 @@ class Point:
         self.x = x
         self.y = y
 
-    def update_from(self, symbol):
-        if symbol == CartSymbol.LEFT: self.__left()
-        elif symbol == CartSymbol.RIGHT: self.__right()
-        elif symbol == CartSymbol.UP: self.__up()
-        elif symbol == CartSymbol.DOWN: self.__down()
-
-    def __left(self):
+    def left(self):
         self.x = self.x - 1
 
-    def __right(self):
+    def right(self):
         self.x = self.x + 1
 
-    def __up(self):
+    def up(self):
         self.y = self.y - 1
 
-    def __down(self):
+    def down(self):
         self.y = self.y + 1
 
     def __cmp__(self, another_point):
@@ -112,13 +89,27 @@ class Cart:
         self.alive = True
     
     def update_position(self):
-        self.position.update_from(self.symbol)
+        if self.symbol == CartSymbol.LEFT: self.position.left()
+        elif self.symbol == CartSymbol.RIGHT: self.position.right()
+        elif self.symbol == CartSymbol.UP: self.position.up()
+        elif self.symbol == CartSymbol.DOWN: self.position.down()
 
     def update_decision_and_symbol(self, found_symbol):
         if found_symbol == INTERSECTION:
             self.last_decision = self.last_decision.next()
-        if found_symbol in [INTERSECTION, CURVE_NW_SE, CURVE_NE_SW]:
-            self.symbol = self.symbol.next_from(found_symbol, self.last_decision)
+
+            if self.last_decision == Decision.LEFT: self.symbol = self.symbol.left()
+            elif self.last_decision == Decision.RIGHT: self.symbol = self.symbol.right()
+        elif found_symbol == CURVE_NW_SE:
+            if self.symbol == CartSymbol.LEFT: self.symbol = CartSymbol.DOWN
+            elif self.symbol == CartSymbol.RIGHT: self.symbol = CartSymbol.UP
+            elif self.symbol == CartSymbol.UP: self.symbol = CartSymbol.RIGHT
+            elif self.symbol == CartSymbol.DOWN: self.symbol = CartSymbol.LEFT
+        elif found_symbol == CURVE_NE_SW:
+            if self.symbol == CartSymbol.LEFT: self.symbol = CartSymbol.UP
+            elif self.symbol == CartSymbol.RIGHT: self.symbol = CartSymbol.DOWN
+            elif self.symbol == CartSymbol.UP: self.symbol = CartSymbol.LEFT
+            elif self.symbol == CartSymbol.DOWN: self.symbol = CartSymbol.RIGHT
 
     def crash(self):
         self.alive = False
