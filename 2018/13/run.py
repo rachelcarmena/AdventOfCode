@@ -32,6 +32,18 @@ class CartSymbol(Enum):
         if self == self.DOWN: return self.LEFT
         if self == self.LEFT: return self.UP
         if self == self.UP: return self.RIGHT
+        
+    def curve_NW_SE(self):
+        if self == self.LEFT: return self.DOWN
+        if self == self.RIGHT: return self.UP
+        if self == self.UP: return self.RIGHT
+        if self == self.DOWN: return self.LEFT
+    
+    def curve_NE_SW(self):
+        if self == self.LEFT: return self.UP
+        if self == self.RIGHT: return self.DOWN
+        if self == self.UP: return self.LEFT
+        if self == self.DOWN: return self.RIGHT
 
 class Point:
 
@@ -97,19 +109,12 @@ class Cart:
     def update_decision_and_symbol(self, found_symbol):
         if found_symbol == INTERSECTION:
             self.last_decision = self.last_decision.next()
-
             if self.last_decision == Decision.LEFT: self.symbol = self.symbol.left()
             elif self.last_decision == Decision.RIGHT: self.symbol = self.symbol.right()
         elif found_symbol == CURVE_NW_SE:
-            if self.symbol == CartSymbol.LEFT: self.symbol = CartSymbol.DOWN
-            elif self.symbol == CartSymbol.RIGHT: self.symbol = CartSymbol.UP
-            elif self.symbol == CartSymbol.UP: self.symbol = CartSymbol.RIGHT
-            elif self.symbol == CartSymbol.DOWN: self.symbol = CartSymbol.LEFT
+            self.symbol = self.symbol.curve_NW_SE()
         elif found_symbol == CURVE_NE_SW:
-            if self.symbol == CartSymbol.LEFT: self.symbol = CartSymbol.UP
-            elif self.symbol == CartSymbol.RIGHT: self.symbol = CartSymbol.DOWN
-            elif self.symbol == CartSymbol.UP: self.symbol = CartSymbol.LEFT
-            elif self.symbol == CartSymbol.DOWN: self.symbol = CartSymbol.RIGHT
+            self.symbol = self.symbol.curve_NE_SW()
 
     def crash(self):
         self.alive = False
