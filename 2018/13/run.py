@@ -56,16 +56,22 @@ class Point:
         self.x = x
         self.y = y
 
-    def left(self):
+    def update_from(self, symbol):
+        if symbol == CartSymbol.LEFT: self.__left()
+        if symbol == CartSymbol.RIGHT: self.__right()
+        if symbol == CartSymbol.UP: self.__up()
+        if symbol == CartSymbol.DOWN: self.__down()
+
+    def __left(self):
         self.x = self.x - 1
 
-    def right(self):
+    def __right(self):
         self.x = self.x + 1
 
-    def up(self):
+    def __up(self):
         self.y = self.y - 1
 
-    def down(self):
+    def __down(self):
         self.y = self.y + 1
 
     def __cmp__(self, another_point):
@@ -106,10 +112,7 @@ class Cart:
         self.alive = True
     
     def update_position(self):
-        if self.symbol == CartSymbol.LEFT: self.position.left()
-        if self.symbol == CartSymbol.RIGHT: self.position.right()
-        if self.symbol == CartSymbol.UP: self.position.up()
-        if self.symbol == CartSymbol.DOWN: self.position.down()
+        self.position.update_from(self.symbol)
 
     def update_decision_and_symbol(self, found_symbol):
         if found_symbol == INTERSECTION:
