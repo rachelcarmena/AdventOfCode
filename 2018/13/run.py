@@ -66,7 +66,7 @@ class Mine:
 
     def __init__(self, filename):
         self.data = []
-        for row in open('input.txt'):
+        for row in open(filename):
             self.data.append(row)
 
     def get_symbol_from(self, position):
