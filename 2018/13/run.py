@@ -56,11 +56,6 @@ class Point:
         self.x = x
         self.y = y
 
-    def beforeThat(self, another_point):
-        if (self.y == another_point.y):
-            return self.x - another_point.x
-        return self.y - another_point.y
-
     def left(self):
         self.x = self.x - 1
 
@@ -73,8 +68,13 @@ class Point:
     def down(self):
         self.y = self.y + 1
 
-    def __eq__(self, another_element):
-        return self.x == another_element.x and self.y == another_element.y
+    def __cmp__(self, another_point):
+        if (self.y == another_point.y):
+            return self.x - another_point.x
+        return self.y - another_point.y
+
+    def __eq__(self, another_point):
+        return self.x == another_point.x and self.y == another_point.y
 
     def __str__(self):
         return "({0}, {1})".format(self.x, self.y)
@@ -130,7 +130,7 @@ class Carts:
         self.data = carts
 
     def __order_for_the_tick(self):
-        self.data = sorted(self.data, lambda a,b: a.position.beforeThat(b.position))
+        self.data = sorted(self.data, key=lambda cart: cart.position)
     
     def __exist_position(self, position):
         found_carts = filter(lambda cart: cart.alive and (cart.position == position), self.data)    
