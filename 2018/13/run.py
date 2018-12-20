@@ -58,9 +58,9 @@ class Point:
 
     def update_from(self, symbol):
         if symbol == CartSymbol.LEFT: self.__left()
-        if symbol == CartSymbol.RIGHT: self.__right()
-        if symbol == CartSymbol.UP: self.__up()
-        if symbol == CartSymbol.DOWN: self.__down()
+        elif symbol == CartSymbol.RIGHT: self.__right()
+        elif symbol == CartSymbol.UP: self.__up()
+        elif symbol == CartSymbol.DOWN: self.__down()
 
     def __left(self):
         self.x = self.x - 1
