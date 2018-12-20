@@ -139,7 +139,7 @@ class Carts:
     def __crash_carts_with_position(self, position):
         self.data = map(lambda cart: cart.crash() if (cart.position == position) else cart, self.data)
 
-    def tick(self, mine):
+    def tick_in(self, mine):
         self.__order_for_the_tick()
         for cart in carts.data:
             if not cart.alive: continue
@@ -170,6 +170,6 @@ if __name__ == "__main__":
     carts = mine.get_carts()
     survivors = carts
     while len(survivors) > 1:
-        carts = carts.tick(mine)
+        carts = carts.tick_in(mine)
         survivors = carts.get_survivors()
     print "Last survivor: " + str(survivors)
